@@ -1,88 +1,309 @@
-/* Stage 6: Theme & Styles — refined for Rabbit R1 (240×282) */
-
-/* Themeable tokens (will be set by theme-engine) */
-:root{
-  --primary-color: #ff7043;
-  --secondary-color: #ff7043;
-  --bg-color: #000000;
-  --header-bg-color: #000000;
-  --item-bg: #151515;
-  --item-bg-hover: #1f1f1f;
-  --border-color: #262626;
-  --font-color: #e6e6e6;
-  --icon-color: #7a7a7a;
-  --button-font-color: #ffffff;
-
-  --content-width: 240px;
-  --radius: 9px;
-  --safe-top: env(safe-area-inset-top, 6px);
+:root {
+    --bg-color: #000000;
+    --font-color: #e0e0e0;
+    --header-bg-color: var(--bg-color); /* Fallback to the body background */
+    --primary-color: #ff7043; /* Rabbit R1 Orange */
+    --secondary-color: var(--primary-color); /* For secondary buttons, defaults to primary */
+    --border-color: #2a2a2a;
+    --item-bg: #1c1c1c;
+    --item-bg-hover: #2c2c2c;
+    --icon-color: #7a7a7a; /* Slightly darker inactive color */
+    --font-family: 'SF Pro Text', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --selection-bg-color: rgba(255, 112, 67, 0.15); /* A tint of the primary color */
+    --selection-border-color: var(--primary-color);
+    --checkbox-border-color: #555;
+    --button-font-color: #FFFFFF; /* Default to white, will be updated by theme */
+    --checkbox-checked-bg: var(--primary-color);
+}
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+body {
+    font-family: var(--font-family);
+    background-color: var(--bg-color);
+    color: var(--font-color);
+    font-size: 14px; /* Base font size for smaller display */
+    margin: 0;
+}
+.main-view {
+    width: 100%;
+    max-width: 480px;
+    min-width: 240px;
+    margin: 0 auto;
+    /* Top padding is now handled by the header to fill the safe area with the background */
+    padding: 0 8px 8px;
+}
+header {
+    /* Use flexbox for easy centering and precise padding control */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* Height is now determined by content + padding */
+    padding-top: var(--rabbit-safe-area-inset-top, 0px); /* Remove extra gap above logo */
+    padding-bottom: 3px; /* Reduced to tighten space */
+    background-color: var(--header-bg-color);
+    margin-bottom: 0;
+}
+#logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+.logo-text {
+    font-family: 'Exo 2', sans-serif;
+    font-size: 1.4em; /* ~20px */
+    font-weight: 700; /* Bold */
+    color: var(--font-color); /* Make it themeable */
+    letter-spacing: 0.5px;
+}
+.logo-rocket {
+    width: 20px;
+    height: 20px;
+    fill: var(--primary-color); /* Themeable icon color */
+    transform: rotate(-20deg); /* A dynamic launch angle */
+    transition: fill 0.2s ease; /* Smooth color change on theme switch */
+    margin-bottom: 2px; /* Visually align with the font */
+}
+.main-view.input-mode-active header,
+.main-view.input-mode-active .actions-bar {
+    display: none;
+}
+.main-view.input-mode-active {
+    /* Add padding to account for the device's safe area (e.g., status bar) */
+    padding-top: var(--rabbit-safe-area-inset-top, 10px);
+}
+.search-section {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 5px; /* Added 1px space below search bar */
+    max-width: 400px; /* Prevent search from touching edges */
+    margin: 0 auto 5px; /* Center the search section */
+    align-items: center; /* Vertically center the input and buttons */
+}
+.search-input-wrapper {
+    position: relative;
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+}
+.search-input-wrapper input {
+    width: 100%;
+    /* Add padding to the right so text doesn't go under the 'X' button */
+    padding-right: 30px;
+}
+/* Common style for clear buttons in input fields */
+#clearSearchBtn, #clearThemeInputBtn {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--icon-color);
+}
+#clearSearchBtn:hover, #clearThemeInputBtn:hover {
+    color: var(--font-color);
+    filter: none;
+}
+#clearSearchBtn svg, #clearThemeInputBtn svg {
+    width: 20px;
+    height: 20px;
+}
+#searchBtn, #quickLaunchBtn, #deleteAllBtn, #themeBtn {
+    background: transparent;
+    border: none;
+    padding: 0;
+    width: 26px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+/* Hide the web search button by default on the main view */
+#searchBtn {
+    display: none;
+}
+#quickLaunchBtn svg, #deleteAllBtn svg {
+    width: 18px;
+    height: 18px;
+    fill: var(--icon-color);
+}
+#searchBtn svg {
+    width: 16px; /* Smaller icon for search */
+    height: 16px;
+    fill: var(--icon-color);
+}
+/* Specific styling for the theme button's image icon */
+#themeBtn img {
+    width: 18px;
+    height: 18px;
+    display: block;
+}
+input[type="text"] {
+    flex-grow: 1;
+    padding: 3px 8px; /* Reduced vertical padding */
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background-color: var(--item-bg);
+    color: var(--font-color);
+    font-size: 1em;
+    min-width: 0; /* Fix for flexbox overflow */
+}
+input[type="text"]:focus,
+select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+/* In input mode, the main search bar gets taller for better usability */
+.main-view.input-mode-active #searchInput {
+    padding-top: 8px;
+    padding-bottom: 8px;
+}
+button {
+    padding: 8px 8px;
+    border: none;
+    background-color: var(--primary-color);
+    color: var(--button-font-color);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1em;
+    flex-shrink: 0; /* Prevent buttons from shrinking in flex containers */
+}
+button:hover {
+    filter: brightness(1.15);
+}
+/* Override default hover for transparent icon buttons and give them a new one */
+#searchBtn:hover, #quickLaunchBtn:hover, #deleteAllBtn:hover, #themeBtn:hover {
+    filter: none;
+}
+#deleteAllBtn:hover svg {
+    fill: #e74c3c; /* A dangerous red */
+}
+#searchBtn:hover svg, #quickLaunchBtn:hover svg, .view-btn:hover svg {
+    fill: var(--primary-color);
+}
+/* For the theme button, which uses an <img>, we can't change fill. A background is a good alternative. */
+#themeBtn:hover {
+    background-color: var(--item-bg-hover);
+}
+/* Secondary button style for non-primary actions like 'Cancel' */
+body button.secondary {
+    background-color: transparent;
+    border: 1px solid var(--secondary-color);
+    color: var(--secondary-color);
+}
+body button.secondary:hover {
+    background-color: var(--selection-bg-color);
+    filter: none; /* Override the default button hover */
+}
+body button.secondary:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    background-color: var(--selection-bg-color);
+}
+/* Special class for the 'Rabbit Me!' button to always use the default orange */
+button.rabbit-default {
+    background-color: #ff7043;
+    color: #FFFFFF;
+    border: 1px solid transparent;
+}
+button.rabbit-default:hover {
+    filter: brightness(1.15);
+}
+/* The cancel button is only shown in input mode */
+#cancelSearchBtn {
+    display: none;
+    padding: 4px 10px; /* More compact padding */
+    font-size: 0.9em; /* Smaller font */
 }
 
-/* Reset & layout */
-*{box-sizing:border-box}
-html,body{height:100%}
-body{
-  margin:0;padding:0;background:var(--bg-color);color:var(--font-color);
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-  display:flex;justify-content:center;font-size:14px;
-}
-.main-view{
-  width:100%;max-width:var(--content-width);padding:calc(var(--safe-top) + 6px) 8px 10px;
-  -webkit-user-select:none;-ms-user-select:none;user-select:none;
+/* --- Card View Styles (Scoped Reset) --- */
+#cardContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
-/* Header */
-.sdk-header, #app-header{display:flex;align-items:center;gap:8px;background:var(--header-bg-color);padding:6px 8px;border-radius:var(--radius);margin-bottom:8px}
-#app-title{font-size:1rem;margin:0;font-weight:700;color:var(--font-color)}
+/* 1. Scoped Reset: Neutralize inherited/global styles for the card and its direct children. */
+.card,
+.card > * {
+    all: unset;
+    display: revert;
+    box-sizing: border-box;
+}
 
-/* Search */
-.search-section{display:flex;align-items:center;gap:6px;margin-bottom:8px}
-.search-input-wrapper{flex:1;position:relative}
-#search-input{width:100%;padding:8px 30px 8px 10px;border-radius:8px;border:1px solid var(--border-color);background:var(--item-bg);color:var(--font-color);font-size:0.95rem}
-#clear-search{position:absolute;right:6px;top:50%;transform:translateY(-50%);background:transparent;border:0;color:var(--icon-color);cursor:pointer}
+/* 2. Reapply Card Container Rules */
+.card {
+    background-color: var(--item-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 0.75rem 0.625rem; /* ~12px top/bottom, ~10px left/right */
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+    margin-bottom: 8px; /* Maintain spacing between cards */
+}
 
-/* Actions */
-.actions-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
-.actions-bar button{background:transparent;border:0;color:var(--icon-color);font-size:1rem;padding:6px;border-radius:8px;cursor:pointer}
-.actions-bar button:hover{color:var(--secondary-color);background:rgba(255,255,255,0.02)}
+.card.focused {
+    border-color: var(--selection-border-color);
+    background-color: var(--selection-bg-color);
+}
 
-/* Card list */
-.card-list{display:flex;flex-direction:column;gap:8px;min-height:160px;max-height:220px;overflow:auto;padding:2px}
-.placeholder{color:var(--icon-color);text-align:center;padding:18px 6px;font-size:0.95rem}
+/* 3. Reapply Card Children Rules */
+.card .link-favicon {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+    display: block;
+    object-fit: cover;
+    border-radius: 4px;
+}
 
-/* Card */
-.sdk-card{background:var(--item-bg);border:1px solid var(--border-color);border-radius:10px;padding:8px;display:flex;gap:8px;align-items:center;min-height:42px}
-.sdk-card:hover{background:var(--item-bg-hover)}
-.card-left{display:flex;align-items:center;gap:8px;flex:1;min-width:0}
-.link-favicon{width:28px;height:28px;border-radius:6px;flex-shrink:0;object-fit:cover}
-.link-description{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
-.card-actions{display:flex;gap:8px;align-items:center}
-.card-actions button{background:transparent;border:0;color:var(--icon-color);cursor:pointer;padding:6px;border-radius:6px}
-.favorite-btn.is-favorite{color:var(--primary-color);font-weight:700}
+.card .link-description {
+    flex: 1 1 auto;
+    font-weight: bold;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
+    cursor: pointer;
+}
 
-/* category headers */
-.category-header{font-weight:700;color:var(--primary-color);padding:6px 2px;margin:0;background:transparent;font-size:0.95rem}
-.links-container{display:flex;flex-direction:column;gap:6px}
+.card .link-actions {
+    display: flex;
+    gap: 10px;
+    flex-direction: row;
+    align-items: center;
+    flex-shrink: 0;
+}
 
-/* overlay / dialog */
-#overlay-root{position:fixed;inset:0;pointer-events:none;z-index:1000}
-.dialog{pointer-events:auto;position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);background:var(--item-bg);border:1px solid var(--border-color);padding:12px;border-radius:10px;min-width:200px;max-width:92%;box-shadow:0 8px 30px rgba(0,0,0,0.6)}
-.dialog h2{margin:0 0 8px 0;font-size:1rem}
-.dialog .row{display:flex;gap:8px;align-items:center;margin-bottom:8px}
-.dialog input[type="text"], .dialog input[type="url"], .dialog select{flex:1;padding:8px;border-radius:8px;border:1px solid var(--border-color);background:transparent;color:var(--font-color)}
-.dialog .actions{display:flex;justify-content:flex-end;gap:8px}
-.dialog button{padding:6px 10px;border-radius:8px;border:0;background:var(--primary-color);color:var(--button-font-color);cursor:pointer}
-.dialog button.secondary{background:transparent;color:var(--font-color);border:1px solid var(--border-color)}
+.card .link-actions span {
+    display: inline-flex;
+    cursor: pointer;
+    font-size: 1.1em;
+    color: var(--icon-color);
+}
+.card .link-actions span:hover { color: var(--primary-color); }
 
-/* theme preview */
-.theme-preview{display:flex;gap:8px;align-items:center;margin-bottom:8px}
-.theme-swatch{width:36px;height:36px;border-radius:6px;border:1px solid var(--border-color)}
+.card .link-actions svg {
+    width: 16px;
+    height: 16px;
+    display: block;
+}
 
-/* volume dock */
-.volume-dock{position:fixed;right:8px;bottom:10px;background:rgba(0,0,0,0.45);padding:6px;border-radius:10px;backdrop-filter:blur(4px);z-index:800}
-#volume-slider{width:120px}
+/* --- End Card View Styles --- */
 
-<<<<<<< HEAD
 .add-suggestion-item, .web-search-item {
     cursor: pointer;
 }
@@ -676,8 +897,3 @@ body{
     padding: 4px 6px;
     font-size: 0.9em; /* Use a relative unit to make the font slightly smaller */
 }
-=======
-/* helpers */
-.hidden{display:none}
-.visually-hidden{position:absolute!important;height:1px;width:1px;overflow:hidden;clip:rect(1px,1px,1px,1px);white-space:nowrap;}
->>>>>>> 7b9a7b61d4dd3b20ed083ee58dfa68598c88de29

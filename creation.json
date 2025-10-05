@@ -1,28 +1,15 @@
 {
-  "name": "launch-pad-r1",
-  "version": "1.0.0",
-  "title": "Launch Pad R1",
-  "description": "Compact link launcher rebuilt to use Rabbit SDK (rabbit-hmi-oss).",
-  "author": "You",
-  "entry": "index.html",
-  "icons": {
-    "16": "icons/icon-16.png",
-    "48": "icons/icon-48.png",
-    "128": "icons/icon-128.png"
-  },
+  "name": "Launch Pad R1",
+  "id": "com.yourname.launchpadr1",
+  "entry_file": "index.html",
   "permissions": [
     "core:launch-url",
     "core:say",
     "core:haptics",
+    "core:serpapi",
+    "vibrate",
+    "tts",
     "plainStorage",
-    "secureStorage",
-    "tts"
-  ],
-  "capabilities": {
-    "ui": {
-      "preferred-width": 240,
-      "preferred-height": 282
-    }
-  },
-  "manifest_version": 1
+    "secureStorage"
+  ]
 }
