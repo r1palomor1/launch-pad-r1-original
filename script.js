@@ -38,19 +38,11 @@ const youtubePlayerContainer = document.getElementById('youtubePlayer');
 const playerBackBtn = document.getElementById('playerBackBtn');
 const playerSearchBtn = document.getElementById('playerSearchBtn');
 const playerStatus = document.getElementById('playerStatus');
-const playerPlayPauseBtn = document.getElementById('playerPlayPauseBtn');
-const playerStopBtn = document.getElementById('playerStopBtn');
-const playerAudioOnlyBtn = document.getElementById('playerAudioOnlyBtn');
-const playerContainer = document.querySelector('.player-container');
+const playerVolume = document.getElementById('playerVolume');
 const SUN_ICON_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 18a6 6 0 1 1 0-12 6 6 0 0 1 0 12zm0-2a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM11 1h2v3h-2V1zm0 19h2v3h-2v-3zM3.55 4.95l1.414-1.414L7.05 5.636 5.636 7.05 3.55 4.95zm12.728 12.728l1.414-1.414L19.778 18.364l-1.414 1.414-2.086-2.086zM1 11h3v2H1v-2zm19 0h3v2h-3v-2zM4.95 20.45l-1.414-1.414L5.636 17l1.414 1.414-2.086 2.036zM18.364 7.05l1.414-1.414L21.864 7.05l-1.414 1.414-2.086-2.086z"/></svg>`;
 const MOON_ICON_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M10 7a7 7 0 0 0 12 4.9v.1c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2h.1A6.979 6.979 0 0 0 10 7zm-6 5a8 8 0 0 0 8 8 .5.5 0 0 1 .5.5v.5a10 10 0 1 1 0-20 .5.5 0 0 1 .5.5V4a8 8 0 0 0-8 8z"/></svg>`;
 
 let player; // Will hold the YouTube player instance
-const PLAY_ICON_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>`;
-const PAUSE_ICON_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>`;
-const STOP_ICON_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h12v12H6z"/></svg>`;
-const AUDIO_ICON_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3a9 9 0 0 0-9 9v7c0 1.1.9 2 2 2h4v-8H5v-1a7 7 0 0 1 14 0v1h-4v8h4c1.1 0 2-.9 2-2v-7a9 9 0 0 0-9-9z"/></svg>`;
-let isAudioOnly = false;
 let originalThemeState = { theme: 'rabbit', mode: 'dark' };
 let suggestionRequestCount = 0;
 const GENERIC_FAVICON_SRC = 'data:image/svg+xml,%3csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'%23888\'%3e%3cpath d=\'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z\'/%3e%3c/svg%3e';
@@ -434,12 +426,6 @@ function getYoutubeVideoId(url) {
 function openPlayerView(videoId, title) {
     playerVideoTitle.textContent = title;
     internalPlayerOverlay.style.display = 'flex';
-
-    // Force the initial UI state to be visible immediately.
-    playerPlayPauseBtn.innerHTML = PLAY_ICON_SVG;
-    playerStopBtn.innerHTML = STOP_ICON_SVG;
-    playerAudioOnlyBtn.innerHTML = AUDIO_ICON_SVG;
-
     
     // This function creates the player. It will be called by the YouTube API callback.
     const createPlayer = () => {
@@ -453,14 +439,13 @@ function openPlayerView(videoId, title) {
                 videoId: videoId,
                 playerVars: {
                     'playsinline': 1,
-                    'controls': 1, // Enable native YouTube controls
+                    'controls': 0,
                     'rel': 0,
                     'showinfo': 0,
                     'modestbranding': 1
                 },
                 events: {
-                    'onReady': onPlayerReady,
-                    'onStateChange': onPlayerStateChange
+                    'onReady': (event) => event.target.playVideo()
                 }
             });
         } catch (e) {
@@ -486,10 +471,7 @@ function closePlayerView() {
     playerVideoTitle.textContent = '';
     // Reset player UI elements
     playerStatus.textContent = '';
-    playerPlayPauseBtn.innerHTML = '';
-    isAudioOnly = false;
-    playerContainer.classList.remove('audio-only');
-    playerAudioOnlyBtn.classList.remove('active');
+    playerVolume.textContent = '';
     youtubePlayerContainer.innerHTML = '';
 }
 
@@ -1307,97 +1289,5 @@ logo.addEventListener('click', goHome);
     playerSearchBtn.addEventListener('click', async () => {
         await showAlert('Coming Soon!');
     });
-
-    playerPlayPauseBtn.addEventListener('click', togglePlayback);
-
-    playerStopBtn.addEventListener('click', closePlayerView);
-
-    playerAudioOnlyBtn.addEventListener('click', () => {
-        isAudioOnly = !isAudioOnly;
-        playerContainer.classList.toggle('audio-only', isAudioOnly);
-        playerAudioOnlyBtn.classList.toggle('active', isAudioOnly);
-        triggerHaptic();
-        sayOnRabbit(isAudioOnly ? "Audio only" : "Video enabled");
-    });
-
-    // Use the correct 'sideClick' event based on the SDK demo.
-    window.addEventListener('sideClick', (event) => {
-        if (internalPlayerOverlay.style.display === 'flex') {
-            // Prevent any default OS action for the click.
-            event.preventDefault();
-            togglePlayback();
-        }
-    });
-
-    // --- Scroll Wheel Navigation ---
-    // Uses the correct event names found in the SDK documentation.
-    // This now handles both the main list and lists within dialogs.
-    const SCROLL_AMOUNT_MAIN = 120; // Pixels to scroll on the main page.
-    const SCROLL_AMOUNT_DIALOG = 80; // A smaller scroll amount for lists in dialogs.
-
-    function getActiveScrollTarget() {
-        if (themeDialogOverlay.style.display === 'flex') return themeColorList;
-        if (deletePromptOverlay.style.display === 'flex') return deleteLinksList;
-        if (favoritesPromptOverlay.style.display === 'flex') return favoritesList;
-        
-        // Check if we are on the main view and not in input mode or another overlay.
-        const onMainView = internalPlayerOverlay.style.display === 'none' &&
-                           genericPromptOverlay.style.display === 'none' &&
-                           !mainView.classList.contains('input-mode-active');
-        
-        if (onMainView) return window;
-
-        return null; // No active target to scroll.
-    }
-
-    window.addEventListener('scrollUp', () => {
-        const target = getActiveScrollTarget();
-        if (target) {
-            target.scrollBy({ top: -(target === window ? SCROLL_AMOUNT_MAIN : SCROLL_AMOUNT_DIALOG), behavior: 'smooth' });
-        }
-    });
-
-    window.addEventListener('scrollDown', () => {
-        const target = getActiveScrollTarget();
-        if (target) {
-            target.scrollBy({ top: (target === window ? SCROLL_AMOUNT_MAIN : SCROLL_AMOUNT_DIALOG), behavior: 'smooth' });
-        }
-    });
-    // --- End of Scroll Wheel Navigation ---
-
     renderLinks();
 })();
-
-function togglePlayback() {
-    if (!player || typeof player.getPlayerState !== 'function') return;
-    triggerHaptic();
-    const playerState = player.getPlayerState();
-    if (playerState === YT.PlayerState.PLAYING) {
-        player.pauseVideo();
-    } else {
-        player.playVideo();
-    }
-}
-
-function onPlayerReady(event) {
-    // Don't autoplay. The player is ready and will wait for user input.
-    // The initial state change to UNSTARTED (-1) will set the UI.
-}
-
-function onPlayerStateChange(event) {
-    if (event.data === YT.PlayerState.PLAYING) {
-        playerStatus.textContent = 'Playing';
-        playerPlayPauseBtn.innerHTML = PAUSE_ICON_SVG;
-    } else if (event.data === YT.PlayerState.PAUSED ) {
-        playerStatus.textContent = 'Paused';
-        playerPlayPauseBtn.innerHTML = PLAY_ICON_SVG;
-    } else if (event.data === YT.PlayerState.ENDED ) {
-        playerStatus.textContent = 'Ended';
-        playerPlayPauseBtn.innerHTML = PLAY_ICON_SVG; // Show play icon to allow replay
-    } else if (event.data === YT.PlayerState.BUFFERING) {
-        playerStatus.textContent = 'Buffering...';
-    } else if (event.data === YT.PlayerState.UNSTARTED) {
-        playerStatus.textContent = 'Ready to Play';
-        playerPlayPauseBtn.innerHTML = PLAY_ICON_SVG;
-    }
-}
