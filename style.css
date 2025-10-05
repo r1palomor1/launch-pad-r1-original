@@ -1,0 +1,683 @@
+/* Stage 6: Theme & Styles — refined for Rabbit R1 (240×282) */
+
+/* Themeable tokens (will be set by theme-engine) */
+:root{
+  --primary-color: #ff7043;
+  --secondary-color: #ff7043;
+  --bg-color: #000000;
+  --header-bg-color: #000000;
+  --item-bg: #151515;
+  --item-bg-hover: #1f1f1f;
+  --border-color: #262626;
+  --font-color: #e6e6e6;
+  --icon-color: #7a7a7a;
+  --button-font-color: #ffffff;
+
+  --content-width: 240px;
+  --radius: 9px;
+  --safe-top: env(safe-area-inset-top, 6px);
+}
+
+/* Reset & layout */
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;padding:0;background:var(--bg-color);color:var(--font-color);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  display:flex;justify-content:center;font-size:14px;
+}
+.main-view{
+  width:100%;max-width:var(--content-width);padding:calc(var(--safe-top) + 6px) 8px 10px;
+  -webkit-user-select:none;-ms-user-select:none;user-select:none;
+}
+
+/* Header */
+.sdk-header, #app-header{display:flex;align-items:center;gap:8px;background:var(--header-bg-color);padding:6px 8px;border-radius:var(--radius);margin-bottom:8px}
+#app-title{font-size:1rem;margin:0;font-weight:700;color:var(--font-color)}
+
+/* Search */
+.search-section{display:flex;align-items:center;gap:6px;margin-bottom:8px}
+.search-input-wrapper{flex:1;position:relative}
+#search-input{width:100%;padding:8px 30px 8px 10px;border-radius:8px;border:1px solid var(--border-color);background:var(--item-bg);color:var(--font-color);font-size:0.95rem}
+#clear-search{position:absolute;right:6px;top:50%;transform:translateY(-50%);background:transparent;border:0;color:var(--icon-color);cursor:pointer}
+
+/* Actions */
+.actions-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.actions-bar button{background:transparent;border:0;color:var(--icon-color);font-size:1rem;padding:6px;border-radius:8px;cursor:pointer}
+.actions-bar button:hover{color:var(--secondary-color);background:rgba(255,255,255,0.02)}
+
+/* Card list */
+.card-list{display:flex;flex-direction:column;gap:8px;min-height:160px;max-height:220px;overflow:auto;padding:2px}
+.placeholder{color:var(--icon-color);text-align:center;padding:18px 6px;font-size:0.95rem}
+
+/* Card */
+.sdk-card{background:var(--item-bg);border:1px solid var(--border-color);border-radius:10px;padding:8px;display:flex;gap:8px;align-items:center;min-height:42px}
+.sdk-card:hover{background:var(--item-bg-hover)}
+.card-left{display:flex;align-items:center;gap:8px;flex:1;min-width:0}
+.link-favicon{width:28px;height:28px;border-radius:6px;flex-shrink:0;object-fit:cover}
+.link-description{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.card-actions{display:flex;gap:8px;align-items:center}
+.card-actions button{background:transparent;border:0;color:var(--icon-color);cursor:pointer;padding:6px;border-radius:6px}
+.favorite-btn.is-favorite{color:var(--primary-color);font-weight:700}
+
+/* category headers */
+.category-header{font-weight:700;color:var(--primary-color);padding:6px 2px;margin:0;background:transparent;font-size:0.95rem}
+.links-container{display:flex;flex-direction:column;gap:6px}
+
+/* overlay / dialog */
+#overlay-root{position:fixed;inset:0;pointer-events:none;z-index:1000}
+.dialog{pointer-events:auto;position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);background:var(--item-bg);border:1px solid var(--border-color);padding:12px;border-radius:10px;min-width:200px;max-width:92%;box-shadow:0 8px 30px rgba(0,0,0,0.6)}
+.dialog h2{margin:0 0 8px 0;font-size:1rem}
+.dialog .row{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+.dialog input[type="text"], .dialog input[type="url"], .dialog select{flex:1;padding:8px;border-radius:8px;border:1px solid var(--border-color);background:transparent;color:var(--font-color)}
+.dialog .actions{display:flex;justify-content:flex-end;gap:8px}
+.dialog button{padding:6px 10px;border-radius:8px;border:0;background:var(--primary-color);color:var(--button-font-color);cursor:pointer}
+.dialog button.secondary{background:transparent;color:var(--font-color);border:1px solid var(--border-color)}
+
+/* theme preview */
+.theme-preview{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+.theme-swatch{width:36px;height:36px;border-radius:6px;border:1px solid var(--border-color)}
+
+/* volume dock */
+.volume-dock{position:fixed;right:8px;bottom:10px;background:rgba(0,0,0,0.45);padding:6px;border-radius:10px;backdrop-filter:blur(4px);z-index:800}
+#volume-slider{width:120px}
+
+<<<<<<< HEAD
+.add-suggestion-item, .web-search-item {
+    cursor: pointer;
+}
+.add-suggestion-item:hover, .web-search-item:hover {
+    background-color: var(--item-bg-hover);
+    border-color: var(--primary-color);
+}
+.web-search-item {
+    justify-content: center;
+}
+
+.favorite-btn.is-favorite {
+    color: #FFD700; /* Gold, for high visibility across all themes */
+}
+.favorite-indicator {
+    color: #E6C300; /* A slightly less bright gold */
+    font-size: 0.85em; /* Make it a bit smaller than the header text */
+    /* The star character can sometimes sit high, this helps align it */
+    display: inline-block;
+    transform: translateY(-1px);
+}
+.category-header {
+    font-size: 1em;
+    font-weight: bold;
+    color: var(--primary-color);
+    margin: 0; /* Remove default margins */
+    padding-bottom: 0.35rem; /* ~5px */
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* Add space *above* a category header only if it follows an expanded container */
+.links-container.expanded + .category-header {
+    margin-top: 1rem; /* ~16px */
+}
+
+#cardContainer > h3:first-of-type {
+    margin-top: 0;
+}
+/* Styles for the inputs inside an "add/edit" card */
+.card input, .card select {
+    width: 100%;
+    margin-top: 5px;
+    padding: 6px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background-color: var(--item-bg);
+    color: var(--font-color);
+    font-size: 0.95em;
+}
+.card > *:first-child {
+    margin-top: 0;
+}
+.form-actions {
+    display: flex;
+    justify-content: flex-end; /* Align buttons to the right */
+    gap: 8px;
+    margin-top: 4px; /* Add a little space above the buttons */
+}
+
+/* --- Delete Prompt Styles --- */
+.delete-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Spacing between radio buttons */
+}
+.delete-options label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-size: 1em;
+}
+.delete-options input[type="radio"] {
+    /* Basic styling for radio buttons */
+    accent-color: var(--primary-color);
+}
+.delete-link-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px;
+    cursor: pointer;
+    border-bottom: 1px solid var(--border-color);
+    user-select: none;
+}
+.delete-link-item:last-child {
+    border-bottom: none;
+}
+.delete-link-item:hover {
+    background-color: var(--item-bg-hover);
+}
+.delete-link-item .delete-checkbox {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.delete-link-item .delete-checkbox svg {
+    width: 18px;
+    height: 18px;
+    fill: currentColor;
+}
+.delete-checkbox .icon-checkbox-unchecked {
+    color: var(--checkbox-border-color);
+}
+.delete-checkbox .icon-checkbox-checked {
+    color: var(--primary-color);
+}
+.delete-checkbox .icon-favorite {
+    color: #FFD700; /* Gold */
+}
+.delete-link-item-description {
+    flex-grow: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-weight: bold;
+}
+
+/* --- Common Dialog List Styles --- */
+.favorites-list,
+.delete-links-list,
+.theme-color-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    overflow-y: auto;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background-color: var(--bg-color);
+}
+
+/* --- Favorites Prompt Styles --- */
+.favorites-list {
+    max-height: 65vh; /* Increased to show more items */
+}
+.delete-links-list {
+    max-height: 45vh; /* Increased height for better visibility */
+}
+.theme-color-list {
+    max-height: 46vh; /* Increased height to show more colors */
+}
+.favorite-list-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    cursor: pointer;
+    border-bottom: 1px solid var(--border-color);
+    user-select: none;
+}
+.favorite-list-item:last-child {
+    border-bottom: none;
+}
+.favorite-list-item:hover {
+    background-color: var(--item-bg-hover);
+}
+.favorite-list-item .link-favicon {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+    display: block;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.favorite-list-item-description {
+    flex-grow: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-weight: bold;
+}
+.custom-prompt-dialog .no-favorites-message {
+    text-align: center; color: var(--icon-color); padding: 10px; font-weight: normal;
+}
+.remove-favorite-btn {
+    flex-shrink: 0;
+    cursor: pointer;
+    color: var(--icon-color);
+    padding: 4px; /* Easy tap target */
+}
+.remove-favorite-btn:hover {
+    color: #e74c3c; /* Red for remove action */
+}
+.remove-favorite-btn svg {
+    width: 16px;
+    height: 16px;
+    display: block;
+}
+
+.theme-color-item {
+    padding: 8px;
+    cursor: pointer;
+    border-bottom: 1px solid var(--border-color);
+    user-select: none;
+    font-weight: bold;
+}
+.theme-color-item:last-child {
+    border-bottom: none;
+}
+.theme-color-item:hover {
+    background-color: var(--item-bg-hover);
+}
+.theme-color-item.selected {
+    background-color: var(--selection-bg-color);
+    border: 1px solid var(--selection-border-color);
+    padding: 7px; /* Adjust padding to account for the border */
+}
+.theme-color-list .theme-color-item {
+    /* Ensure color names are readable in light mode */
+    color: var(--font-color);
+}
+.theme-color-item.disabled {
+    color: var(--icon-color);
+    text-decoration: line-through;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+.theme-color-item.disabled:hover { background-color: var(--item-bg); }
+.theme-color-list .no-matches-message {
+    text-align: center; color: var(--icon-color); padding: 10px; font-weight: normal;
+    /* This is not a list item, so it shouldn't have hover effects */
+    cursor: default;
+}
+.theme-color-list {
+     /* Transitions for smooth collapse when keyboard is active */
+    transition: opacity 0.15s ease-out, max-height 0.15s ease-out, margin 0.15s ease-out, padding 0.15s ease-out, border 0.15s ease-out;
+}
+
+/* --- Custom Scrollbar for Lists --- */
+.favorites-list::-webkit-scrollbar,
+.delete-links-list::-webkit-scrollbar,
+.theme-color-list::-webkit-scrollbar {
+    width: 6px;
+}
+.favorites-list::-webkit-scrollbar-track,
+.delete-links-list::-webkit-scrollbar-track,
+.theme-color-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+.favorites-list::-webkit-scrollbar-thumb,
+.delete-links-list::-webkit-scrollbar-thumb,
+.theme-color-list::-webkit-scrollbar-thumb {
+    background-color: var(--icon-color);
+    border-radius: 3px;
+    border: 2px solid var(--bg-color); /* Match list background for padding effect */
+}
+
+.scrollable-list-dialog:focus {
+    outline: none; /* Remove the default outline to prevent double borders */
+    border-color: var(--primary-color); /* Change the border color on focus */
+}
+
+.actions-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px; /* Reduced to gain space */
+}
+.list-actions {
+    display: flex;
+    align-items: center;
+    /* A gap to visually separate view controls from the quick launch button */
+    gap: 8px; 
+}
+#toggleAllLink {
+    color: var(--icon-color);
+    text-decoration: none;
+    font-size: 0.9em;
+}
+#toggleAllLink:hover {
+    color: var(--primary-color);
+}
+.app-actions {
+    display: flex;
+    gap: 8px;
+}
+.view-controls {
+    display: flex;
+    gap: 10px;
+}
+.view-btn {
+    background: transparent;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    width: 26px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.view-btn svg {
+    display: block;
+    width: 18px;
+    height: 18px;
+    fill: var(--icon-color);
+}
+.view-btn.active svg {
+    fill: var(--primary-color);
+}
+#quickLaunchBtn.active svg {
+    /* A noticeable but not overly bright gold to make it stand out */
+    fill: #E6C300; 
+}
+/* Group View Styles */
+.category-header.collapsible {
+    cursor: pointer;
+    position: relative;
+    padding-right: 20px; /* Space for arrow */
+}
+.category-header.collapsible::after {
+    content: '▶';
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%) rotate(0deg);
+    font-size: 0.8em;
+    transition: transform 0.2s ease;
+}
+.category-header.collapsible.expanded::after {
+    transform: translateY(-50%) rotate(90deg);
+}
+.links-container {
+    display: none;
+    padding-top: 5px;
+}
+.links-container.expanded {
+    display: block;
+}
+/* Custom Prompt Styles */
+.custom-prompt-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    /* Align to top to avoid keyboard overlap on small screens */
+    align-items: flex-start;
+    z-index: 1000;
+    padding: 10px 8px 8px; /* Further reduced top padding to bring dialog higher */
+    transition: padding-top 0.2s ease-in-out; /* Smooth transition for focus */
+}
+.custom-prompt-overlay.input-focused {
+    padding-top: 2px; /* Move dialog almost to the top edge to ensure buttons are visible */
+}
+.custom-prompt-dialog {
+    background-color: var(--item-bg); 
+    padding: 8px; /* Squeezed padding */
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    width: 100%;
+    max-width: 320px;
+    display: flex;
+    flex-direction: column; 
+    gap: 4px; /* Squeezed gap */
+    transition: padding 0.2s ease-in-out, gap 0.2s ease-in-out; /* Smooth transition */
+}
+.custom-prompt-title-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    position: relative;
+    /* Add padding to prevent the centered title from overlapping the absolutely positioned lab toggle. */
+    /* The value is a bit more than the toggle's width to provide a safe margin. */
+    padding-right: 60px;
+}
+.custom-prompt-dialog .custom-prompt-title {
+    margin: 0;
+    font-weight: bold;
+    text-align: center;
+}
+.lab-toggle-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 2px 6px;
+    border-radius: 6px;
+    background-color: var(--item-bg);
+    border: 1px solid var(--border-color);
+}
+.lab-toggle-wrapper label {
+    font-size: 0.85em; /* Slightly larger for better balance */
+    font-weight: bold;
+    color: var(--icon-color);
+    cursor: pointer;
+    user-select: none;
+}
+#genericPromptMessage {
+    text-align: center;
+    line-height: 1.5;
+    font-weight: normal;
+    /* Add a small top margin to prevent text from being clipped at the top of the dialog.
+       Bottom margin is handled by the parent's flex-gap. */
+    margin: 4px 0 0;
+}
+.lab-toggle-wrapper:hover {
+    border-color: var(--primary-color);
+}
+.lab-toggle-wrapper:hover label {
+    color: var(--primary-color);
+}
+#lab-checkbox {
+    accent-color: var(--primary-color);
+    cursor: pointer;
+    transform: scale(0.9); /* Make checkbox slightly smaller to match label */
+    margin: 0; /* Adjust alignment after scaling */
+}
+.custom-prompt-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.dialog-icon-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+.dialog-icon-btn svg {
+    width: 20px;
+    height: 20px;
+    fill: var(--icon-color);
+}
+.dialog-icon-btn:hover svg {
+    fill: var(--primary-color);
+}
+.custom-prompt-actions button {
+    /* Make dialog buttons more compact */
+    padding: 5px 8px;
+    font-size: 0.85em;
+}
+/* To ensure visual consistency, primary buttons in dialogs get extra padding
+   to match the dimensions of secondary buttons which have a 1px border. */
+.custom-prompt-actions button:not(.secondary) {
+    padding: 6px 9px;
+}
+
+/* Make the "Rabbit Me!" button slightly more compact to help with spacing */
+.custom-prompt-actions button.rabbit-default {
+    padding: 5px 6px;
+}
+.custom-prompt-actions-left {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.custom-prompt-actions-right {
+    display: flex;
+    gap: 8px;
+}
+/* When keyboard is active, move dialog up to avoid overlap */
+.custom-prompt-overlay.input-focused {
+    padding-top: 2px;
+}
+.custom-prompt-overlay.input-focused .custom-prompt-dialog {
+    padding: 10px;
+    gap: 5px;
+}
+.custom-prompt-error {
+    color: #e74c3c; /* A noticeable red */
+    font-size: 0.9em;
+    text-align: center;
+    margin: 0;
+    min-height: 1.2em; /* Reserve space to prevent layout shift */
+}
+.custom-prompt-error:empty {
+    /* Hide the element completely when there is no error message to show */
+    min-height: 0;
+}
+.dialog-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+.dialog-input-wrapper input {
+    width: 100%;
+    padding-right: 30px; /* Space for clear button */
+}
+
+/* --- Internal Player Styles --- */
+#internalPlayerOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--bg-color);
+    z-index: 1001; /* Higher than other dialogs */
+    display: flex;
+    flex-direction: column;
+    padding: var(--rabbit-safe-area-inset-top, 10px) 8px 8px;
+}
+
+.player-header {
+    flex: 0 0 auto; /* Don't grow, just take up needed space */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+#playerVideoTitle {
+    font-size: 0.9em; /* Reduced font size */
+    font-weight: bold;
+    color: var(--primary-color);
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.player-container {
+    flex-grow: 1; /* Allow the player to take up all available vertical space */
+    position: relative; /* For positioning the click shield */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #000; /* Black background for the player */
+    border-radius: 8px;
+    overflow: hidden;
+}
+.player-container.audio-only #youtubePlayer {
+    opacity: 0;
+    pointer-events: none; /* Prevent interaction with the hidden player */
+}
+.player-container.audio-only::after {
+    content: 'Audio Only';
+    position: absolute;
+    color: var(--icon-color);
+    font-size: 1.2em;
+    font-weight: bold;
+    opacity: 0.8;
+    text-align: center;
+    pointer-events: none; /* Make sure text doesn't block anything */
+}
+
+/* Ensure the audio-only button reverts to the default icon color when not active */
+#playerAudioOnlyBtn svg {
+    fill: var(--icon-color);
+}
+
+#playerAudioOnlyBtn.active svg {
+    fill: var(--primary-color);
+}
+
+#youtubePlayer {
+    width: 100%;
+    height: 100%;
+}
+
+.player-controls {
+    flex: 0 0 auto; /* Don't grow, just take up needed space */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between; /* Pushes nav to bottom */
+    padding-top: 10px;
+}
+.player-navigation {
+    display: flex;
+    justify-content: space-between; /* Distribute buttons evenly */
+    align-items: center;
+    width: 100%;
+    gap: 8px;
+}
+.player-navigation .dialog-icon-btn svg {
+    /* Make the player icons slightly larger for easier tapping */
+    width: 24px;
+    height: 24px;
+}
+.player-navigation button {
+    /* Make text buttons more compact */
+    padding: 4px 6px;
+    font-size: 0.9em; /* Use a relative unit to make the font slightly smaller */
+}
+=======
+/* helpers */
+.hidden{display:none}
+.visually-hidden{position:absolute!important;height:1px;width:1px;overflow:hidden;clip:rect(1px,1px,1px,1px);white-space:nowrap;}
+>>>>>>> 7b9a7b61d4dd3b20ed083ee58dfa68598c88de29

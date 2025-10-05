@@ -1,0 +1,120 @@
+// ...existing code...
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=240, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <title>Launch Pad R1</title>
+
+  <!-- Local styles (always present) -->
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- SDK / OSS styles (CDN-first, fallback to vendor/) -->
+  <script>
+    (function loadCss() {
+      // If you have a hosted location for the SDK files, set SDK_HOST to it.
+      // Example: "https://cdn.jsdelivr.net/gh/your-org/your-repo@latest"
+      // Leave empty to always use vendor/ fallback.
+      const SDK_HOST = ""; // <-- edit only if you host SDK files
+      function add(href) {
+        const l = document.createElement('link');
+        l.rel = 'stylesheet';
+        l.href = href;
+        document.head.appendChild(l);
+      }
+      if (SDK_HOST) {
+        add(SDK_HOST + '/rabbit-hmi-oss/hmi.css');
+        add(SDK_HOST + '/creations-sdk/sdk.css');
+        // fallback to vendor if CDN fails: attempt to detect failure after short delay
+        setTimeout(() => {
+          if (!document.querySelector('link[href*="hmi.css"]') || !document.querySelector('link[href*="sdk.css"]')) {
+            add('vendor/hmi.css');
+            add('vendor/sdk.css');
+          }
+        }, 900);
+      } else {
+        add('vendor/hmi.css');
+        add('vendor/sdk.css');
+      }
+    })();
+  </script>
+</head>
+<body>
+  <main id="app" role="application" aria-label="Launch Pad R1" class="main-view">
+    <header id="app-header" class="sdk-header" role="banner">
+      <img id="logo" src="vendor/logo.svg" alt="Launch Pad R1" width="28" height="28" />
+      <h1 id="app-title">Launch Pad R1</h1>
+    </header>
+
+    <section id="search-area" class="sdk-search search-section" aria-label="Search">
+      <div class="search-input-wrapper">
+        <input id="search-input" type="search" placeholder="Search or paste link..." aria-label="Search or paste link" autocomplete="off" />
+        <button id="clear-search" aria-label="Clear search" hidden>×</button>
+      </div>
+      <div class="search-actions">
+        <button id="search-action" aria-label="Search">🔍</button>
+      </div>
+    </section>
+
+    <nav id="actions-bar" class="sdk-actions actions-bar" aria-label="Actions">
+      <div class="list-actions">
+        <button id="view-toggle" title="Toggle list/group view">📋</button>
+        <button id="collapse-all" title="Collapse all categories">▾</button>
+      </div>
+      <div class="app-actions">
+        <button id="add-link" title="Add Link">＋</button>
+        <button id="quick-launch" title="Quick Launch">☆</button>
+        <button id="theme-open" title="Theme">🎨</button>
+        <button id="delete-mode" title="Delete">🗑️</button>
+      </div>
+    </nav>
+
+    <section id="card-container" class="sdk-card-list card-list" aria-live="polite" role="list">
+      <div id="links-placeholder" class="placeholder">Loading links…</div>
+    </section>
+
+    <div id="overlay-root" aria-hidden="true"></div>
+
+    <div id="volume-dock" class="volume-dock" aria-label="Software volume">
+      <label for="volume-slider" class="visually-hidden">Volume</label>
+      <input id="volume-slider" type="range" min="0" max="100" step="1" />
+    </div>
+  </main>
+
+  <!-- SDK scripts (CDN-first, fallback to vendor/) -->
+  <script>
+    (function loadSdkScripts() {
+      // Set SDK_HOST if you host SDK files remotely (CI can publish there).
+      // Example: "https://cdn.jsdelivr.net/gh/your-org/your-repo@main"
+      const SDK_HOST = ""; // <-- edit only if you host SDK files
+      function addScript(src, onload) {
+        const s = document.createElement('script');
+        s.src = src;
+        s.async = false;
+        if (onload) s.onload = onload;
+        document.head.appendChild(s);
+      }
+      if (SDK_HOST) {
+        addScript(SDK_HOST + '/rabbit-hmi-oss/hmi.js');
+        addScript(SDK_HOST + '/creations-sdk/sdk.js');
+        // attempt fallback to vendor after short delay
+        setTimeout(() => {
+          if (typeof window.rabbit === 'undefined') {
+            addScript('vendor/hmi.js');
+            addScript('vendor/sdk.js');
+          }
+        }, 900);
+      } else {
+        addScript('vendor/hmi.js');
+        addScript('vendor/sdk.js');
+      }
+    })();
+  </script>
+
+  <!-- Theme engine -->
+  <script src="theme-engine.js"></script>
+
+  <!-- App script -->
+  <script src="script.js"></script>
+</body>
+</html>

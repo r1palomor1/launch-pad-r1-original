@@ -1,0 +1,25 @@
+# Rabbit SDK clones and large/derived files
+rabbit-hmi-oss/
+creations-sdk/
+Original App/
+
+# Build, caches, logs
+dist/
+build/
+.cache/
+*.log
+npm-debug.log
+yarn-error.log
+
+# Editor & system files
+.vscode/
+*.code-workspace
+.DS_Store
+Thumbs.db
+
+# Secrets / local storage
+.env
+secrets.json
+
+# Node modules (if used)
+node_modules/
