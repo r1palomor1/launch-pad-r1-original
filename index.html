@@ -53,7 +53,7 @@
             </div>
         </div>
 
-        <div id="cardContainer"></div>
+        <ul id="linksList"></ul>
     </div>
     
     <div id="themeDialogOverlay" class="custom-prompt-overlay" style="display: none;">
@@ -132,29 +132,21 @@
             <!-- This div will act as a "click shield" to prevent external launches -->
         </div>
         <div class="player-controls">
-            <div class="player-navigation">
-                <button id="playerBackBtn" class="secondary">Back</button>
-                <button id="playerPlayPauseBtn" class="dialog-icon-btn"></button>
-                <button id="playerStopBtn" class="dialog-icon-btn"></button>
-                <button id="playerAudioOnlyBtn" class="dialog-icon-btn"></button>
-                <button id="playerSearchBtn" class="secondary">Search</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- YouTube Internal Search View -->
-    <div id="youtubeSearchViewOverlay" class="custom-prompt-overlay" style="display: none;">
-        <div class="youtube-search-view">
-            <div class="search-section">
-                <div class="search-input-wrapper">
-                    <input type="text" id="youtubeSearchInput" placeholder="Search YouTube..." autocomplete="off">
+            <div class="player-info-area">
+                <div class="player-main-actions">
+                    <button id="playerPlayPauseBtn" class="dialog-icon-btn"></button>
+                    <button id="playerStopBtn" class="dialog-icon-btn"></button>
+                    <button id="playerAudioOnlyBtn" class="dialog-icon-btn"></button>
+                </div>
+                <div id="playerStatus"></div>
+                <div class="player-volume-info">
+                    <span id="playerVolume"></span>
                 </div>
             </div>
-            <div class="custom-prompt-actions">
-                <button id="youtubeSearchCancelBtn" class="secondary">Cancel</button>
-                <button id="youtubeSearchGoBtn">Search</button>
+            <div class="player-navigation">
+                <button id="playerBackBtn" class="secondary">Back to Launch Pad</button>
+                <button id="playerSearchBtn" class="secondary">Search</button>
             </div>
-            <div id="youtubeSearchResultsContainer" class="scrollable-list-dialog"></div>
         </div>
     </div>
 

@@ -3,7 +3,7 @@ const searchInput = document.getElementById('searchInput');
 const logo = document.getElementById('logo');
 const clearSearchBtn = document.getElementById('clearSearchBtn');
 const searchBtn = document.getElementById('searchBtn');
-const cardContainer = document.getElementById('cardContainer');
+const linksList = document.getElementById('linksList');
 const toggleViewBtn = document.getElementById('toggleViewBtn');
 const quickLaunchBtn = document.getElementById('quickLaunchBtn');
 const toggleAllLink = document.getElementById('toggleAllLink');
@@ -37,14 +37,11 @@ const playerVideoTitle = document.getElementById('playerVideoTitle');
 const youtubePlayerContainer = document.getElementById('youtubePlayer');
 const playerBackBtn = document.getElementById('playerBackBtn');
 const playerSearchBtn = document.getElementById('playerSearchBtn');
+const playerStatus = document.getElementById('playerStatus');
 const playerPlayPauseBtn = document.getElementById('playerPlayPauseBtn');
 const playerStopBtn = document.getElementById('playerStopBtn');
 const playerAudioOnlyBtn = document.getElementById('playerAudioOnlyBtn');
 const playerContainer = document.querySelector('.player-container');
-const youtubeSearchViewOverlay = document.getElementById('youtubeSearchViewOverlay');
-const youtubeSearchInput = document.getElementById('youtubeSearchInput');
-const youtubeSearchCancelBtn = document.getElementById('youtubeSearchCancelBtn'); // This will be unused after revert, but harmless
-const youtubeSearchResultsContainer = document.getElementById('youtubeSearchResultsContainer');
 const SUN_ICON_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 18a6 6 0 1 1 0-12 6 6 0 0 1 0 12zm0-2a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM11 1h2v3h-2V1zm0 19h2v3h-2v-3zM3.55 4.95l1.414-1.414L7.05 5.636 5.636 7.05 3.55 4.95zm12.728 12.728l1.414-1.414L19.778 18.364l-1.414 1.414-2.086-2.086zM1 11h3v2H1v-2zm19 0h3v2h-3v-2zM4.95 20.45l-1.414-1.414L5.636 17l1.414 1.414-2.086 2.036zM18.364 7.05l1.414-1.414L21.864 7.05l-1.414 1.414-2.086-2.086z"/></svg>`;
 const MOON_ICON_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M10 7a7 7 0 0 0 12 4.9v.1c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2h.1A6.979 6.979 0 0 0 10 7zm-6 5a8 8 0 0 0 8 8 .5.5 0 0 1 .5.5v.5a10 10 0 1 1 0-20 .5.5 0 0 1 .5.5V4a8 8 0 0 0-8 8z"/></svg>`;
 
@@ -243,10 +240,10 @@ function renderLinks(linksToRender = links) {
         toggleViewBtn.title = 'List View';
     }
     quickLaunchBtn.classList.toggle('active', favoriteLinkIds.size > 0);
-    cardContainer.innerHTML = '';
+    linksList.innerHTML = '';
     const fragment = document.createDocumentFragment();
     if (linksToRender.length === 0) {
-        cardContainer.innerHTML = '<p style="text-align:center; color: #6c757d;">No links saved. Type in the search box to add a new link.</p>';
+        linksList.innerHTML = '<p style="text-align:center; color: #6c757d;">No links saved. Type in the search box to add a new link.</p>';
         return;
     }
     const groupedLinks = linksToRender.reduce((acc, link) => {
@@ -291,7 +288,7 @@ function renderLinks(linksToRender = links) {
             }
         });
     }
-    cardContainer.appendChild(fragment);
+    linksList.appendChild(fragment);
 }
 
 function getHostname(url) {
@@ -301,22 +298,24 @@ function getHostname(url) {
 }
 
 function renderLinkItem(link) {
-    const div = document.createElement('div');
-    div.className = 'card';
-    div.dataset.id = link.id;
+    const li = document.createElement('li');
+    li.className = 'link-item';
+    li.dataset.id = link.id;
     const isFavorite = favoriteLinkIds.has(link.id);
-    div.innerHTML = `
+    li.innerHTML = `
         <img src="https://www.google.com/s2/favicons?sz=64&domain_url=${getHostname(link.url)}" class="link-favicon" alt="Favicon" onerror="this.onerror=null; this.src='${GENERIC_FAVICON_SRC}'; this.style.padding='3px';">
-        <div class="link-description">${link.description}</div>
-        <div class="link-actions">
-            <span class="favorite-btn" title="Set as favorite"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 18.26l-7.053 3.948 1.575-7.928L.587 8.792l8.027-.952L12 .5l3.386 7.34 8.027.952-5.935 5.488 1.575 7.928z"></path></svg></span>
-            <span class="edit-btn" title="Edit"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M15.7279 9.57627L14.3137 8.16206L5.82842 16.6473V18H7.18263L15.7279 9.57627ZM17.1421 8.16206L18.5563 6.74785L17.1421 5.33363L15.7279 6.74785L17.1421 8.16206ZM7.24264 20H3V15.7574L14.435 4.32233C14.8256 3.93181 15.4587 3.93181 15.8492 4.32233L19.6777 8.15076C20.0682 8.54128 20.0682 9.17445 19.6777 9.56497L8.24264 21H7.24264V20Z"></path></svg></span>
-            <span class="delete-btn" title="Delete"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M17 6H22V8H20V21C20 21.5523 19.5523 22 19 22H5C4.44772 22 4 21.5523 4 21V8H2V6H7V3C7 2.44772 7.44772 2 8 2H16C16.5523 2 17 2.44772 17 3V6ZM18 8H6V20H18V8ZM9 11H11V17H9V11ZM13 11H15V17H13V11ZM9 4V6H15V4H9Z"></path></svg></span>
+        <div class="link-display">
+            <div class="link-description">${link.description}</div>
+            <div class="link-actions">
+                <span class="favorite-btn" title="Set as favorite"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 18.26l-7.053 3.948 1.575-7.928L.587 8.792l8.027-.952L12 .5l3.386 7.34 8.027.952-5.935 5.488 1.575 7.928z"></path></svg></span>
+                <span class="edit-btn" title="Edit"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M15.7279 9.57627L14.3137 8.16206L5.82842 16.6473V18H7.18263L15.7279 9.57627ZM17.1421 8.16206L18.5563 6.74785L17.1421 5.33363L15.7279 6.74785L17.1421 8.16206ZM7.24264 20H3V15.7574L14.435 4.32233C14.8256 3.93181 15.4587 3.93181 15.8492 4.32233L19.6777 8.15076C20.0682 8.54128 20.0682 9.17445 19.6777 9.56497L8.24264 21H7.24264V20Z"></path></svg></span>
+                <span class="delete-btn" title="Delete"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M17 6H22V8H20V21C20 21.5523 19.5523 22 19 22H5C4.44772 22 4 21.5523 4 21V8H2V6H7V3C7 2.44772 7.44772 2 8 2H16C16.5523 2 17 2.44772 17 3V6ZM18 8H6V20H18V8ZM9 11H11V17H9V11ZM13 11H15V17H13V11ZM9 4V6H15V4H9Z"></path></svg></span>
+            </div>
         </div>`;
     if (isFavorite) {
-        div.querySelector('.favorite-btn')?.classList.add('is-favorite');
+        li.querySelector('.favorite-btn')?.classList.add('is-favorite');
     }
-    return div;
+    return li;
 }
 
 function setView(view) {
@@ -357,7 +356,7 @@ function handleDeleteLink(idToDelete) {
     searchHandler(searchInput.value);
 }
 
-cardContainer.addEventListener('click', async (e) => {
+linksList.addEventListener('click', async (e) => {
     const target = e.target;
     if (target.matches('input.new-description')) {
         if (!target.dataset.hasBeenInteracted) {
@@ -369,7 +368,7 @@ cardContainer.addEventListener('click', async (e) => {
         }
         return;
     }
-    const li = target.closest('.card');
+    const li = target.closest('.link-item');
     const categoryHeader = target.closest('.category-header.collapsible');
     if (currentView === 'group' && categoryHeader) {
         handleCategoryToggle(categoryHeader);
@@ -394,14 +393,15 @@ cardContainer.addEventListener('click', async (e) => {
         triggerHaptic();
         saveLinks();
         searchHandler(searchInput.value);
-    } else if (target.closest('.link-description') || target.closest('.link-favicon')) {
+    } else if (target.closest('.link-display') || target.closest('.link-favicon')) {
         if (li.querySelector('.edit-description')) return;
         const link = links.find(l => l.id === id);
         if (!link) return;
 
-        const isYouTube = getHostname(link.url).includes('youtube.com') || getHostname(link.url).includes('youtu.be');
+        const videoId = getYoutubeVideoId(link.url);
 
-        if (isYouTube) {
+        // Only show the internal launch option if we found a valid video ID.
+        if (videoId) {
             const choice = await showGenericPrompt({
                 message: `How would you like to launch "${link.description}"?`,
                 buttons: [
@@ -409,20 +409,14 @@ cardContainer.addEventListener('click', async (e) => {
                     { text: 'Externally', value: 'external', class: 'secondary', order: 1 }
                 ]
             });
-            
+
             if (choice === 'internal') {
-                const videoId = getYoutubeVideoId(link.url);
-                if (videoId) {
-                    // If it's a link to a specific video, open the player directly.
-                    openPlayerView(videoId, link.description);
-                } else {
-                    // If it's a generic YouTube link, open our new search view.
-                    openYouTubeSearchView();
-                }
+                openPlayerView(videoId, link.description);
             } else if (choice === 'external') {
                 triggerHaptic();
                 launchUrlOnRabbit(link.url, link.description);
             }
+            // If prompt is cancelled, do nothing.
         } else {
             // Default behavior for all other links (including non-video YouTube links)
             triggerHaptic();
@@ -459,7 +453,7 @@ function openPlayerView(videoId, title) {
                 videoId: videoId,
                 playerVars: {
                     'playsinline': 1,
-                    'controls': 0, // Disable native YouTube controls
+                    'controls': 1, // Enable native YouTube controls
                     'rel': 0,
                     'showinfo': 0,
                     'modestbranding': 1
@@ -491,24 +485,12 @@ function closePlayerView() {
     player = null;
     playerVideoTitle.textContent = '';
     // Reset player UI elements
+    playerStatus.textContent = '';
     playerPlayPauseBtn.innerHTML = '';
     isAudioOnly = false;
     playerContainer.classList.remove('audio-only');
     playerAudioOnlyBtn.classList.remove('active');
     youtubePlayerContainer.innerHTML = '';
-}
-
-function openYouTubeSearchView() {
-    youtubeSearchViewOverlay.style.display = 'flex';
-    youtubeSearchInput.value = '';
-    // Clear previous results and don't auto-focus.
-    youtubeSearchResultsContainer.innerHTML = '';
-}
-
-function closeYouTubeSearchView() {
-    youtubeSearchViewOverlay.style.display = 'none';
-    youtubeSearchInput.value = '';
-    youtubeSearchResultsContainer.innerHTML = '';
 }
 
 function createFormHTML(linkData = {}, isForEditing = false) {
@@ -556,14 +538,14 @@ async function showAddForm(prefillData = {}) {
         return;
     }
     const li = document.createElement('li');
-    li.className = 'card';
+    li.className = 'link-item';
     li.innerHTML = createFormHTML(prefillData, false);
-    cardContainer.appendChild(li);
+    linksList.appendChild(li);
     li.scrollIntoView({ behavior: 'smooth' });
     if (prefillData.description) {
         li.querySelector('.new-category').focus();
     } else {
-        li.querySelector('.new-description')?.focus();
+        li.querySelector('.new-description').focus();
     }
     const saveHandler = async () => {
         const description = li.querySelector('.new-description').value.trim();
@@ -574,8 +556,8 @@ async function showAddForm(prefillData = {}) {
     li.querySelector('.save-new-btn').addEventListener('click', saveHandler);
     li.querySelector('.cancel-btn').addEventListener('click', () => {
         li.remove();
-        searchInput.value = ''; // Clear search on cancel
-        cardContainer.innerHTML = `<div class="search-prompt">Search your links or add from the web.</div>`;
+        searchInput.value = '';
+        linksList.innerHTML = `<div class="search-prompt">Search your links or add from the web.</div>`;
         clearSearchBtn.style.display = 'none';
         cancelSearchBtn.style.display = 'flex';
         searchInput.focus();
@@ -584,7 +566,7 @@ async function showAddForm(prefillData = {}) {
 
 async function handleAddFromQuery(description, url) {
     if (!description) return;
-    cardContainer.innerHTML = '';
+    linksList.innerHTML = '';
     let prefillData = {};
     if (description.includes(' ')) {
         prefillData = { description: description.replace(/\b\w/g, l => l.toUpperCase()), url: url || 'https://' };
@@ -621,7 +603,7 @@ async function addNewLink(linkData) {
 async function performExternalSearch(queryOverride) {
     const query = queryOverride || searchInput.value.trim();
     if (query) {
-        cardContainer.innerHTML = `<div class="search-prompt">Launching web search for "${query}"...</div>`;
+        linksList.innerHTML = `<div class="search-prompt">Launching web search for "${query}"...</div>`;
         const searchUrl = `https://duckduckgo.com/?q=${encodeURIComponent(query)}`;
         await launchUrlOnRabbit(searchUrl, `search for ${query}`);
     } else {
@@ -651,29 +633,29 @@ function renderCombinedResults(query, apiSuggestions, localResults) {
         hasContent = true;
         filteredApiSuggestions.slice(0, 4).forEach(sugg => {
             const suggLi = document.createElement('li');
-            suggLi.className = 'card add-suggestion-item';
+            suggLi.className = 'link-item add-suggestion-item';
             suggLi.innerHTML = `<img src="https://www.google.com/s2/favicons?sz=64&domain_url=${getHostname(sugg.link)}" class="link-favicon" alt="Favicon" onerror="this.onerror=null; this.src='${GENERIC_FAVICON_SRC}'; this.style.padding='3px';"><div class="link-description">Add: ${sugg.title}</div>`;
             suggLi.addEventListener('click', () => handleAddFromQuery(sugg.title, sugg.link));
             fragment.appendChild(suggLi);
         });
     }
     const webSearchLi = document.createElement('li');
-    webSearchLi.className = 'card web-search-item';
+    webSearchLi.className = 'link-item web-search-item';
     webSearchLi.innerHTML = `<div class="link-favicon" style="display: flex; align-items: center; justify-content: center;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="var(--primary-color)" width="20" height="20"><path d="M18.031 16.617l4.283 4.282-1.415 1.415-4.282-4.283A8.96 8.96 0 0 1 11 20c-4.968 0-9-4.032-9-9s4.032-9 9-9 9 4.032 9 9a8.96 8.96 0 0 1-1.969 5.617zm-2.006-.742A6.977 6.977 0 0 0 18 11c0-3.868-3.133-7-7-7-3.868 0-7 3.132-7 7 0 3.867 3.132 7 7 7a6.977 6.977 0 0 0 4.875-1.975l.15-.15z"/></svg></div><div class="link-description">Search for "${query}" on the web</div>`;
     webSearchLi.addEventListener('click', () => performExternalSearch(query));
     fragment.appendChild(webSearchLi);
-    cardContainer.innerHTML = '';
-    cardContainer.appendChild(fragment);
+    linksList.innerHTML = '';
+    linksList.appendChild(fragment);
 }
 
 function handleOSMessage(e, requestQuery) {
     const currentQueryInBox = searchInput.value.trim();
-    if (requestQuery.toLowerCase() !== currentQueryInBox.toLowerCase()) return; // Ignore stale results
-
+    if (requestQuery.toLowerCase() !== currentQueryInBox.toLowerCase()) return;
     try {
-        const data = e.data ? (typeof e.data == "string" ? JSON.parse(e.data) : e.data) : null; // This line is repeated, but harmless
+        let data = e.data ? (typeof e.data == "string" ? JSON.parse(e.data) : e.data) : null;
+        const queryForFilter = requestQuery.trim().toLowerCase();
+        const localResults = links.filter(link => link.description.toLowerCase().includes(queryForFilter) || link.url.toLowerCase().includes(queryForFilter));
         if (data && data.organic_results) {
-            const localResults = links.filter(link => link.description.toLowerCase().includes(requestQuery.toLowerCase()) || link.url.toLowerCase().includes(requestQuery.toLowerCase()));
             renderCombinedResults(requestQuery, data.organic_results, localResults);
         } else {
             renderCombinedResults(requestQuery, [], localResults);
@@ -736,7 +718,7 @@ mainView.addEventListener('focusin', (e) => {
         cancelSearchBtn.style.display = query.length > 0 ? 'none' : 'flex';
         clearSearchBtn.style.display = query.length > 0 ? 'flex' : 'none';
         if (query === '') {
-            cardContainer.innerHTML = `<div class="search-prompt">Search your links or add from the web.</div>`;
+            linksList.innerHTML = `<div class="search-prompt">Search your links or add from the web.</div>`;
         }
         setTimeout(() => {
             document.querySelector('.search-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -1322,7 +1304,6 @@ logo.addEventListener('click', goHome);
     favoritesPromptOverlay.addEventListener('click', e => e.stopPropagation());
     genericPromptOverlay.addEventListener('click', e => e.stopPropagation());
     playerBackBtn.addEventListener('click', closePlayerView);
-
     playerSearchBtn.addEventListener('click', async () => {
         await showAlert('Coming Soon!');
     });
@@ -1358,7 +1339,6 @@ logo.addEventListener('click', goHome);
         if (themeDialogOverlay.style.display === 'flex') return themeColorList;
         if (deletePromptOverlay.style.display === 'flex') return deleteLinksList;
         if (favoritesPromptOverlay.style.display === 'flex') return favoritesList;
-        if (youtubeSearchViewOverlay.style.display === 'flex') return youtubeSearchResultsContainer;
         
         // Check if we are on the main view and not in input mode or another overlay.
         const onMainView = internalPlayerOverlay.style.display === 'none' &&
@@ -1406,17 +1386,18 @@ function onPlayerReady(event) {
 
 function onPlayerStateChange(event) {
     if (event.data === YT.PlayerState.PLAYING) {
-        // Update title with the full title from the API
-        const videoData = player.getVideoData();
-        playerVideoTitle.textContent = videoData.title;
-
+        playerStatus.textContent = 'Playing';
         playerPlayPauseBtn.innerHTML = PAUSE_ICON_SVG;
     } else if (event.data === YT.PlayerState.PAUSED ) {
+        playerStatus.textContent = 'Paused';
         playerPlayPauseBtn.innerHTML = PLAY_ICON_SVG;
     } else if (event.data === YT.PlayerState.ENDED ) {
+        playerStatus.textContent = 'Ended';
         playerPlayPauseBtn.innerHTML = PLAY_ICON_SVG; // Show play icon to allow replay
     } else if (event.data === YT.PlayerState.BUFFERING) {
+        playerStatus.textContent = 'Buffering...';
     } else if (event.data === YT.PlayerState.UNSTARTED) {
+        playerStatus.textContent = 'Ready to Play';
         playerPlayPauseBtn.innerHTML = PLAY_ICON_SVG;
     }
 }

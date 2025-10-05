@@ -6,10 +6,6 @@
     "core:launch-url",
     "core:say",
     "core:haptics",
-    "core:serpapi",
-    "vibrate",
-    "tts",
-    "plainStorage",
-    "secureStorage"
+    "core:serpapi"
   ]
 }
